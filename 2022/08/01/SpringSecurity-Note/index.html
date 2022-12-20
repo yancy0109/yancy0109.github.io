@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Spring,SpringBoot,SpringSecurity," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言SpringSecurity是一个功能强大且高度可定制的身份验证和访问控制的框架。 提供完善的认证机制和方法级的授权功能。 它的核心是一组过滤链，不同功能经由不同的过滤器。   JWT介绍JWT是JSON WEB TOKEN的缩写，它是基于 RFC 7519 标准定义的一种可以安全传输的的JSON对象，由于使用了数字签名，所以是可信任和安全的。 JWT组成格式JWT token   heade">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringSecurity Note">
+<meta property="og:url" content="https://yancy0109.github.io/2022/08/01/SpringSecurity-Note/index.html">
+<meta property="og:site_name" content="炸毛的猫">
+<meta property="og:description" content="前言SpringSecurity是一个功能强大且高度可定制的身份验证和访问控制的框架。 提供完善的认证机制和方法级的授权功能。 它的核心是一组过滤链，不同功能经由不同的过滤器。   JWT介绍JWT是JSON WEB TOKEN的缩写，它是基于 RFC 7519 标准定义的一种可以安全传输的的JSON对象，由于使用了数字签名，所以是可信任和安全的。 JWT组成格式JWT token   heade">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/01/SpringSecurity-Note/image-20220801232808774.png">
+<meta property="article:published_time" content="2022-08-01T15:21:27.000Z">
+<meta property="article:modified_time" content="2022-08-14T10:29:50.143Z">
+<meta property="article:author" content="yancy0109">
+<meta property="article:tag" content="Spring">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="SpringSecurity">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yancy0109.github.io/2022/08/01/SpringSecurity-Note/image-20220801232808774.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yancy0109.github.io/2022/08/01/SpringSecurity-Note/"/>
+
+
+
+
+
+  <title>SpringSecurity Note | 炸毛的猫</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?42b3b6032f376678cb51742535f641c8";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炸毛的猫</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yancy0109.github.io/2022/08/01/SpringSecurity-Note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炸毛的猫">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">SpringSecurity Note</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-08-01T23:21:27+08:00">
+                2022-08-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Spring/" itemprop="url" rel="index">
+                    <span itemprop="name">Spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><em>SpringSecurity是一个功能强大且高度可定制的身份验证和访问控制的框架。</em></p>
+<p><em>提供完善的<strong>认证机制</strong>和方法级的<strong>授权功能</strong>。</em></p>
+<p><em>它的核心是一组过滤链，不同功能经由不同的过滤器。</em></p>
+<p><img sdasdasd src="image-20220801232808774.png" alt="image-20220801232808774"></p>
+<hr>
+<h1 id="JWT介绍"><a href="#JWT介绍" class="headerlink" title="JWT介绍"></a>JWT介绍</h1><p><em>JWT是JSON WEB TOKEN的缩写，它是基于 RFC 7519 标准定义的一种可以安全传输的的JSON对象，由于使用了数字签名，所以是可信任和安全的。</em></p>
+<h2 id="JWT组成"><a href="#JWT组成" class="headerlink" title="JWT组成"></a>JWT组成</h2><h3 id="格式"><a href="#格式" class="headerlink" title="格式"></a>格式</h3><p>JWT token </p>
+<ul>
+<li>header</li>
+<li>payload</li>
+<li>signature</li>
+</ul>
+<h3 id="header"><a href="#header" class="headerlink" title="header"></a>header</h3><p>header中存放签名的生成算法</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;alg&quot;</span><span class="punctuation">:</span> <span class="string">&quot;HS512&quot;</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="payload"><a href="#payload" class="headerlink" title="payload"></a>payload</h3><p>payload中存放用户名、token的生成时间和过期时间</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span><span class="attr">&quot;sub&quot;</span><span class="punctuation">:</span><span class="string">&quot;admin&quot;</span><span class="punctuation">,</span><span class="attr">&quot;created&quot;</span><span class="punctuation">:</span><span class="number">1489079981393</span><span class="punctuation">,</span><span class="attr">&quot;exp&quot;</span><span class="punctuation">:</span><span class="number">1489684781</span><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="signature"><a href="#signature" class="headerlink" title="signature"></a>signature</h3><p>signature为以header和payload生成的签名，一旦header和payload被篡改，验证则失败</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//secret为加密算法的密钥</span></span><br><span class="line">String signature = HMACSHA512(base64UrlEncode(header)+<span class="string">&quot;.&quot;</span>+base64UrlEncode(payload)<span class="punctuation">,</span>secret)</span><br></pre></td></tr></table></figure>
+
+<p><em>样例</em></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImNyZWF0ZWQiOjE1NTY3NzkxMjUzMDksImV4cCI6MTU1NzM4MzkyNX0.diki0193X0bBOETf2UN3r3PotNIEAV7mzIxxeI5IxFyzzkOZxS0PGfF_SK6wxCv2K8S0cZjMkv6b5bCqc0VBw</span><br></pre></td></tr></table></figure>
+
+<h3 id="认证与授权原理"><a href="#认证与授权原理" class="headerlink" title="认证与授权原理"></a>认证与授权原理</h3><ul>
+<li>用户登录，成功后返回Token</li>
+<li>登录后每次用户在调用接口时在header中添加Authorization的头，值为token</li>
+<li>后台对request中Authorization信息解析校验获得用户信息，实现认证和授权</li>
+</ul>
+<h2 id="依赖"><a href="#依赖" class="headerlink" title="依赖"></a>依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--JWT登录支持--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.jsonwebtoken<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>jjwt<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>0.9.1<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="工具类"><a href="#工具类" class="headerlink" title="工具类"></a>工具类</h2><p><em>在这里原作者将工具类交由了Spring管理，全局仅存在一个Utils</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * JwtToken生成工具类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JwtTokenUtils</span> &#123;</span><br><span class="line">    <span class="comment">//Token日志</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOGGER</span> <span class="operator">=</span> LoggerFactory.getLogger(JwtTokenUtils.class);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">CLAIM_KEY_USERNAME</span> <span class="operator">=</span> <span class="string">&quot;sub&quot;</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">String</span> <span class="variable">CLAIM_KEY_CREATED</span> <span class="operator">=</span> <span class="string">&quot;created&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Jwt生成密钥</span></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;jwt.secret&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String secret;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//Jwt过期时间</span></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;jwt.expiration&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long expiration;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *返回token过期时间</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>  token过期时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Date <span class="title function_">generateExpirationDate</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">Date</span>(System.currentTimeMillis() + expiration * <span class="number">1000</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据Claims生成JwtToken</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> claims token附带的信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>       token字符串</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">generateToken</span><span class="params">(Map&lt;String,Object&gt; claims)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Jwts.builder()</span><br><span class="line">                .setClaims(claims)</span><br><span class="line">                .setExpiration(generateExpirationDate())</span><br><span class="line">                .signWith(SignatureAlgorithm.HS512,secret)</span><br><span class="line">                .compact();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *从token获取JWT中的负载</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token token字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>  JWT负载</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Claims <span class="title function_">getClaimsFromToken</span><span class="params">(String token)</span>&#123;</span><br><span class="line">        <span class="type">Claims</span> <span class="variable">claims</span> <span class="operator">=</span> Jwts.parser()</span><br><span class="line">                .setSigningKey(secret)</span><br><span class="line">                .parseClaimsJws(token)</span><br><span class="line">                .getBody();</span><br><span class="line">        <span class="keyword">if</span> (claims == <span class="literal">null</span>)&#123;</span><br><span class="line">            LOGGER.info(<span class="string">&quot;JWT格式验证失败：&#123;&#125;&quot;</span>,token);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> claims;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *根据token字符串解析返回username</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token token字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>      username</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getUsernameFromToken</span><span class="params">(String token)</span>&#123;</span><br><span class="line">        <span class="type">Claims</span> <span class="variable">claims</span> <span class="operator">=</span> getClaimsFromToken(token);</span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> claims.getSubject();</span><br><span class="line">        <span class="keyword">return</span> username;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 验证Token是否有效</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token         Token字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userDetails   数据库中用户信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>              是否有效</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">validateToken</span><span class="params">(String token, UserDetails userDetails)</span>&#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> getUsernameFromToken(token);</span><br><span class="line">        <span class="keyword">return</span> username.equals(userDetails.getUsername()) &amp;&amp; !isTokenExpired(token);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据Token判断是否已经失效</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token     token字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>          token是否失效</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> <span class="title function_">isTokenExpired</span><span class="params">(String token)</span>&#123;</span><br><span class="line">        <span class="type">Date</span> <span class="variable">expiredDate</span> <span class="operator">=</span> getExpiredDateFromToken(token);</span><br><span class="line">        <span class="keyword">return</span> expiredDate.before(<span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据token获取过期时间</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token token字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>      token过期时间</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Date <span class="title function_">getExpiredDateFromToken</span><span class="params">(String token)</span>&#123;</span><br><span class="line">        <span class="type">Claims</span> <span class="variable">claims</span> <span class="operator">=</span> getClaimsFromToken(token);</span><br><span class="line">        <span class="keyword">return</span> claims.getExpiration();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据用户信息生成Token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> userDetails   用户信息</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>              token字符串</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">generateToken</span><span class="params">(UserDetails userDetails)</span> &#123;</span><br><span class="line">        Map&lt;String, Object&gt; claims = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        claims.put(CLAIM_KEY_USERNAME, userDetails.getUsername());</span><br><span class="line">        claims.put(CLAIM_KEY_CREATED, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        <span class="keyword">return</span> generateToken(claims);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 判断token是否可以刷新</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token Token字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>      是否可以刷新</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">canRefresh</span><span class="params">(String token)</span>&#123;</span><br><span class="line">        <span class="comment">//没有过期的Token才可以被刷新</span></span><br><span class="line">        <span class="keyword">return</span> !isTokenExpired(token);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 刷新token</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> token token字符串</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>      新的Token</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">refreshToken</span><span class="params">(String token)</span>&#123;</span><br><span class="line">        <span class="type">Claims</span> <span class="variable">claims</span> <span class="operator">=</span> getClaimsFromToken(token);</span><br><span class="line">        claims.put(CLAIM_KEY_CREATED, <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        <span class="keyword">return</span> generateToken(claims);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h1 id="SpringSecurity"><a href="#SpringSecurity" class="headerlink" title="SpringSecurity"></a>SpringSecurity</h1><h2 id="依赖-1"><a href="#依赖-1" class="headerlink" title="依赖"></a>依赖</h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--SpringSecurity依赖--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-security<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><h3 id="SpringSecurity配置类"><a href="#SpringSecurity配置类" class="headerlink" title="SpringSecurity配置类"></a>SpringSecurity配置类</h3><p><strong>自定义SpringSecurity配置  extends WebSecurityConfigurerAdapter</strong></p>
+<p><em>否则会自动注入DefaultConfigurerAdapter类—-The default configuration for web security</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * SpringSecurity配置类</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Configuration</span></span><br><span class="line"><span class="meta">@EnableWebSecurity</span></span><br><span class="line"><span class="meta">@EnableGlobalMethodSecurity(prePostEnabled=true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">SecurityConfig</span> <span class="keyword">extends</span> <span class="title class_">WebSecurityConfigurerAdapter</span> &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UmsAdminService umsAdminService;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RestfulAccessDeniedHandler restfulAccessDeniedHandler;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RestAuthenticationEntryPoint restAuthenticationEntryPoint;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(HttpSecurity httpSecurity)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        httpSecurity.csrf()     <span class="comment">//使用Jwt,不需要csrf</span></span><br><span class="line">                .disable()</span><br><span class="line">                .sessionManagement()    <span class="comment">//基于Token,所以不需要session</span></span><br><span class="line">                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)</span><br><span class="line">                .and()</span><br><span class="line">                .authorizeRequests()</span><br><span class="line">                .antMatchers(    <span class="comment">//允许对网站静态资源的无授权访问</span></span><br><span class="line">                        <span class="string">&quot;/&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/*.html&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/favicon.ico&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/**/*.html&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/**/*.css&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/**/*.js&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/swagger-ui/**&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/swagger-resources/**&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/v3/api-docs/**&quot;</span>,</span><br><span class="line">                        <span class="string">&quot;/v2/api-docs/**&quot;</span></span><br><span class="line">                ).permitAll()</span><br><span class="line">                .antMatchers(<span class="string">&quot;/admin/login&quot;</span>,<span class="string">&quot;/admin/register&quot;</span>).permitAll() <span class="comment">//对登录注册允许匿名访问</span></span><br><span class="line">                .antMatchers(HttpMethod.OPTIONS).permitAll()    <span class="comment">//跨域请求会进行一次options请求</span></span><br><span class="line"><span class="comment">//                .antMatchers(&quot;/**&quot;).permitAll()               //测试时全部允许访问</span></span><br><span class="line">                .anyRequest()   <span class="comment">//除上面外的所有请求全部需要鉴权认证</span></span><br><span class="line">                .authenticated();</span><br><span class="line">        <span class="comment">//禁用缓存</span></span><br><span class="line">        httpSecurity.headers().cacheControl();</span><br><span class="line">        <span class="comment">//添加Jwt Filter</span></span><br><span class="line">        httpSecurity.addFilterBefore(jwtAuthentucationTokenFilter(), UsernamePasswordAuthenticationFilter.class);</span><br><span class="line">        <span class="comment">//添加自定义未授权和未登录结果返回</span></span><br><span class="line">        httpSecurity.exceptionHandling()</span><br><span class="line">                .accessDeniedHandler(restfulAccessDeniedHandler)</span><br><span class="line">                .authenticationEntryPoint(restAuthenticationEntryPoint);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(WebSecurity web)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="built_in">super</span>.configure(web);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 配置UserDetailsService PasswordEncoder</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">configure</span><span class="params">(AuthenticationManagerBuilder auth)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        auth.userDetailsService(userDetailsService())</span><br><span class="line">                .passwordEncoder(passwordEncoder());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> PasswordEncoder <span class="title function_">passwordEncoder</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">BCryptPasswordEncoder</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="comment">//配置UserDetailsService</span></span><br><span class="line">    <span class="keyword">public</span> UserDetailsService <span class="title function_">userDetailsService</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="comment">//获取用户登录信息</span></span><br><span class="line">        <span class="keyword">return</span> username -&gt; &#123;</span><br><span class="line">            <span class="comment">//根据username查询用户</span></span><br><span class="line">            <span class="type">UmsAdmin</span> <span class="variable">adminByUsername</span> <span class="operator">=</span> umsAdminService.getAdminByUsername(username);</span><br><span class="line">            <span class="keyword">if</span> (Objects.nonNull(adminByUsername))&#123;</span><br><span class="line">                <span class="comment">//根据userId获得PermissioonList</span></span><br><span class="line">                List&lt;UmsPermission&gt; permissionList = umsAdminService.getPermissionList(adminByUsername.getId());</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AdminUserDetails</span>(adminByUsername, permissionList);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UsernameNotFoundException</span>(<span class="string">&quot;用户名或密码错误&quot;</span>);</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Jwt过滤器</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="keyword">public</span> JwtAuthentucationTokenFilter <span class="title function_">jwtAuthentucationTokenFilter</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">JwtAuthentucationTokenFilter</span> <span class="variable">jwtAuthentucationTokenFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JwtAuthentucationTokenFilter</span>();</span><br><span class="line">        <span class="keyword">return</span> jwtAuthentucationTokenFilter;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Bean</span></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> AuthenticationManager <span class="title function_">authenticationManagerBean</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">super</span>.authenticationManagerBean();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>&#96;&#96;&#96;java<br>void configure(HttpSecurity httpSecurity)<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">-	```java</span><br><span class="line">  httpSecurity.antMatchers(    //允许对网站静态资源的无授权访问</span><br><span class="line">          &quot;/&quot;,</span><br><span class="line">          &quot;/*.html&quot;,</span><br><span class="line">          &quot;/favicon.ico&quot;,</span><br><span class="line">          &quot;/**/*.html&quot;,</span><br><span class="line">          &quot;/**/*.css&quot;,</span><br><span class="line">          &quot;/**/*.js&quot;,</span><br><span class="line">          &quot;/swagger-ui/**&quot;,</span><br><span class="line">          &quot;/swagger-resources/**&quot;,</span><br><span class="line">          &quot;/v3/api-docs/**&quot;,		//Swagger3 ...？位置</span><br><span class="line">          &quot;/v2/api-docs/**&quot;    </span><br><span class="line">  ).permitAll()	</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><pre><code>```java
+</code></pre>
+<p> &#x2F;&#x2F;跨域请求会进行一次options请求 – 允许<br> httpSecurity.antMatchers(HttpMethod.OPTIONS).permitAll()   </p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">-	```java</span><br><span class="line">  //添加Jwt Filter 注入的为下方@Bean注入的对象</span><br><span class="line">  httpSecurity.addFilterBefore(jwtAuthentucationTokenFilter(), UsernamePasswordAuthenticationFilter.class);</span><br></pre></td></tr></table></figure>
+</li>
+<li><pre><code>```java
+</code></pre>
+<p> &#x2F;&#x2F;添加自定义未授权和未登录结果返回 response直接返回 在后面了<br> httpSecurity.exceptionHandling()<br>     .accessDeniedHandler(restfulAccessDeniedHandler)<br>     .authenticationEntryPoint(restAuthenticationEntryPoint);</p>
+ <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  </span><br><span class="line">- ```java</span><br><span class="line">    @Override</span><br><span class="line">    /**</span><br><span class="line">     * 配置UserDetailsService</span><br><span class="line">     * 配置PasswordEncoder</span><br><span class="line">     */</span><br><span class="line">    protected void configure(AuthenticationManagerBuilder auth) throws Exception &#123;</span><br><span class="line">        //注入的为下方@Bean注入的对象</span><br><span class="line">        auth.userDetailsService(userDetailsService())</span><br><span class="line">            .passwordEncoder(passwordEncoder());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ul>
+<h3 id="PasswordEncoder"><a href="#PasswordEncoder" class="headerlink" title="PasswordEncoder"></a>PasswordEncoder</h3><p><strong>在这里直接在SpringSecurity类内注入</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注入默认</span></span><br><span class="line"><span class="comment">//可以对密码进行加密 PasswordEncoder.encode(CharSequence rawPassword);</span></span><br><span class="line"><span class="comment">//可以用明文密码与加密密码进行对比</span></span><br><span class="line"><span class="comment">//PasswordEncoder.matches(CharSequence rawPassword, String encodedPassword);</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> PasswordEncoder <span class="title function_">passwordEncoder</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">BCryptPasswordEncoder</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="UserDetailsService"><a href="#UserDetailsService" class="headerlink" title="UserDetailsService"></a>UserDetailsService</h3><p><strong>直接在SpringSecurity类内注入了，因为只有一个接口，可以通过Lambda重写。</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">```java</span><br><span class="line"><span class="comment">//重写了UserDetailsService.loadUserByUsername(String username);</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="comment">//配置UserDetailsService</span></span><br><span class="line"><span class="keyword">public</span> UserDetailsService <span class="title function_">userDetailsService</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="comment">//获取用户登录信息</span></span><br><span class="line">    <span class="keyword">return</span> username -&gt; &#123;</span><br><span class="line">        <span class="comment">//根据username查询用户</span></span><br><span class="line">        <span class="type">UmsAdmin</span> <span class="variable">adminByUsername</span> <span class="operator">=</span> umsAdminService.getAdminByUsername(username);</span><br><span class="line">        <span class="keyword">if</span> (Objects.nonNull(adminByUsername))&#123;</span><br><span class="line">            <span class="comment">//根据userId获得PermissioonList</span></span><br><span class="line">            List&lt;UmsPermission&gt; permissionList = umsAdminService.getPermissionList(adminByUsername.getId());</span><br><span class="line">            <span class="comment">//AdminUserDetails implements UserDetails</span></span><br><span class="line">            <span class="comment">//重写了UserDetails接口方法</span></span><br><span class="line">            <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">AdminUserDetails</span>(adminByUsername, permissionList);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">UsernameNotFoundException</span>(<span class="string">&quot;用户名或密码错误&quot;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br><span class="line">```</span><br></pre></td></tr></table></figure>
+
+<h3 id="UserDetails实现类"><a href="#UserDetails实现类" class="headerlink" title="UserDetails实现类"></a>UserDetails实现类</h3><p><strong>UserDetails规定了SpringSecurity需要的用户信息的方法，我们要对其进行重写</strong></p>
+<p><em>在这个项目中许多权限并没有用到，所以直接返回为true了</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * SpringSecurity需要的用户详情</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">AdminUserDetails</span> <span class="keyword">implements</span> <span class="title class_">UserDetails</span> &#123;</span><br><span class="line">    <span class="comment">//用户实体</span></span><br><span class="line">    <span class="keyword">private</span> UmsAdmin umsAdmin;</span><br><span class="line">    <span class="comment">//用户权限实体List</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;UmsPermission&gt; permissionList;</span><br><span class="line">	</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * AdminUserDetails构造方法</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> umsAdmin          用户实体</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> permissionList    用户权限信息List</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">AdminUserDetails</span><span class="params">(UmsAdmin umsAdmin, List&lt;UmsPermission&gt; permissionList)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.umsAdmin = umsAdmin;</span><br><span class="line">        <span class="built_in">this</span>.permissionList = permissionList;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Collection&lt;? <span class="keyword">extends</span> <span class="title class_">GrantedAuthority</span>&gt; getAuthorities() &#123;</span><br><span class="line">        <span class="comment">//返回当前用户的权限对象SimpleGrantedAuthority List </span></span><br><span class="line">        <span class="comment">//SimpleGrantedAuthority内仅有属性role对应权限内容的字段</span></span><br><span class="line">        <span class="keyword">return</span> permissionList</span><br><span class="line">                .stream().filter(permission -&gt; Objects.nonNull(permission.getValue()))</span><br><span class="line">                .map(permission -&gt; <span class="keyword">new</span> <span class="title class_">SimpleGrantedAuthority</span>(permission.getValue()))</span><br><span class="line">                .collect(Collectors.toList());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getPassword</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> umsAdmin.getPassword();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getUsername</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> umsAdmin.getUsername();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAccountNonExpired</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//账号未过期</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isAccountNonLocked</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//账号未锁定</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isCredentialsNonExpired</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//凭证是否 未过期</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">isEnabled</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//是否启用</span></span><br><span class="line">        <span class="keyword">return</span> umsAdmin.getStatus().equals(<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="UmsAdminService"><a href="#UmsAdminService" class="headerlink" title="UmsAdminService"></a>UmsAdminService</h3><p><strong>用到的对用户信息查询的Service接口，具体实现与Dao层不再展示</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.yancy0109.mall.service;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.yancy0109.mall.mbg.model.UmsAdmin;</span><br><span class="line"><span class="keyword">import</span> com.yancy0109.mall.mbg.model.UmsPermission;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 后台管理员Service</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">UmsAdminService</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 根据用户名获取后台管理员</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> username  用户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>          UmsAdmin</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    UmsAdmin <span class="title function_">getAdminByUsername</span><span class="params">(String username)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 注册功能</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> umsAdminParam     注册UmsAdmin参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>                  UmsAdmin</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    UmsAdmin <span class="title function_">register</span><span class="params">(UmsAdmin umsAdminParam)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 登录</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> username      用户名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> password      密码</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>              Token字符串</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">login</span><span class="params">(String username, String password)</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取用户所有权限---角色权限和+-权限</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> adminId</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span></span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    List&lt;UmsPermission&gt; <span class="title function_">getPermissionList</span><span class="params">(Long adminId)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="UmsPermission实体类"><a href="#UmsPermission实体类" class="headerlink" title="UmsPermission实体类"></a>UmsPermission实体类</h3><p><strong>UserDetailsService实现类内通过调用自定义用户信息Service接口查询出UmsPermissionList，构造UserDetails实现类返回</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UmsPermission</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;父级权限id&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long pid;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;名称&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;权限值&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String value;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;图标&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String icon;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;权限类型：0-&gt;目录；1-&gt;菜单；2-&gt;按钮（接口绑定权限）&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer type;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;前端资源路径&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String uri;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;启用状态；0-&gt;禁用；1-&gt;启用&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer status;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;创建时间&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date createTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;排序&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer sort;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="UmsAdmin实体类"><a href="#UmsAdmin实体类" class="headerlink" title="UmsAdmin实体类"></a>UmsAdmin实体类</h3><p><strong>UserDetailsService实现类内通过调用自定义用户信息Service接口查询出UmsAdmin，构造UserDetails实现类返回</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UmsAdmin</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;头像&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String icon;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;邮箱&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String email;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;昵称&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String nickName;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;备注信息&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String note;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;创建时间&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date createTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;最后登录时间&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date loginTime;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiModelProperty(value = &quot;帐号启用状态：0-&gt;禁用；1-&gt;启用&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Integer status;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> <span class="number">1L</span>;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Jwt过滤器"><a href="#Jwt过滤器" class="headerlink" title="Jwt过滤器"></a>Jwt过滤器</h3><p><strong>这里直接在SpringSecurity内注入了，也可以通过其他注解注入配置好的组件</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Jwt过滤器</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="keyword">public</span> JwtAuthentucationTokenFilter <span class="title function_">jwtAuthentucationTokenFilter</span><span class="params">()</span>&#123;</span><br><span class="line">    <span class="type">JwtAuthentucationTokenFilter</span> <span class="variable">jwtAuthentucationTokenFilter</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">JwtAuthentucationTokenFilter</span>();</span><br><span class="line">    <span class="keyword">return</span> jwtAuthentucationTokenFilter;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>Jwt过滤器内细节内容</em></p>
+<p><strong>调用重写的UserDetails接口方法，返回用户信息</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UserDetails UserDetailsService.loadUserByUsername(String username)</span><br></pre></td></tr></table></figure>
+
+<p><strong>通过Token校验的请求将会设置到SecurityContextHolder</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> SecurityContextHolder.getContext().setAuthentication(Authentication authentication);</span><br></pre></td></tr></table></figure>
+
+<p><em>Filter完整代码</em></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Jwt登录授权过滤器</span></span><br><span class="line"><span class="comment"> * 为什么用Filter而不是Inteceptor -- SpringSecurity实现</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">JwtAuthentucationTokenFilter</span> <span class="keyword">extends</span> <span class="title class_">OncePerRequestFilter</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOGGER</span> <span class="operator">=</span> LoggerFactory.getLogger(JwtAuthentucationTokenFilter.class);</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UserDetailsService userDetailsService;</span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> JwtTokenUtils jwtTokenUtils;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;jwt.tokenHeader&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String tokenHeader;</span><br><span class="line">    <span class="meta">@Value(&quot;$&#123;jwt.tokenHead&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String tokenHead;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">doFilterInternal</span><span class="params">(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        <span class="type">String</span> <span class="variable">authHeader</span> <span class="operator">=</span>  httpServletRequest.getHeader(<span class="built_in">this</span>.tokenHeader);</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(authHeader) &amp;&amp; authHeader.startsWith(tokenHead))&#123;</span><br><span class="line">            <span class="comment">//截取Bearer后</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">authToken</span> <span class="operator">=</span> authHeader.substring(<span class="built_in">this</span>.tokenHead.length());</span><br><span class="line">            <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> jwtTokenUtils.getUsernameFromToken(authToken);</span><br><span class="line">            LOGGER.info(<span class="string">&quot;checking username:&#123;&#125;&quot;</span>,username);</span><br><span class="line">            <span class="keyword">if</span> (StringUtils.isNotBlank(username) &amp;&amp; Objects.isNull(SecurityContextHolder.getContext().getAuthentication()))&#123;</span><br><span class="line">                <span class="type">UserDetails</span> <span class="variable">userDetails</span> <span class="operator">=</span> <span class="built_in">this</span>.userDetailsService.loadUserByUsername(username);</span><br><span class="line">                <span class="comment">//检验是否过期</span></span><br><span class="line">                <span class="keyword">if</span> (jwtTokenUtils.validateToken(authToken,userDetails))&#123;</span><br><span class="line">                    <span class="comment">//UsernamePasswordAuthenticationToken 管理对应用户</span></span><br><span class="line">                    <span class="type">UsernamePasswordAuthenticationToken</span> <span class="variable">authenticationToken</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">UsernamePasswordAuthenticationToken</span>(userDetails,</span><br><span class="line">                                                                                                            <span class="literal">null</span>,</span><br><span class="line">                                                                                                    userDetails.getAuthorities());</span><br><span class="line">                    authenticationToken.setDetails(<span class="keyword">new</span> <span class="title class_">WebAuthenticationDetailsSource</span>().buildDetails(httpServletRequest));</span><br><span class="line">                    LOGGER.info(<span class="string">&quot;authenticated user: &#123;&#125;&quot;</span>, username);</span><br><span class="line">                    <span class="comment">//设置到SecurityContextHolder</span></span><br><span class="line">                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        filterChain.doFilter(httpServletRequest, httpServletResponse);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>&#96;&#96;&#96;java<br>@Bean<br>@Override<br>public AuthenticationManager authenticationManagerBean() throws Exception {<br>return super.authenticationManagerBean();<br>}<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 自定义未授权返回</span><br><span class="line"></span><br><span class="line">```java</span><br><span class="line">/**</span><br><span class="line"> * 当访问接口没有权限，自定义返回结果</span><br><span class="line"> */</span><br><span class="line">@Component</span><br><span class="line">public class RestfulAccessDeniedHandler implements AccessDeniedHandler &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException &#123;</span><br><span class="line">        httpServletResponse.setCharacterEncoding(&quot;UTF-8&quot;);</span><br><span class="line">        httpServletResponse.setContentType(&quot;application/json&quot;);</span><br><span class="line">        httpServletResponse.getWriter().println(</span><br><span class="line">                JSONUtil.parse(CommonResult.forbiden())</span><br><span class="line">        );</span><br><span class="line">        httpServletResponse.getWriter().flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="未登录结果返回"><a href="#未登录结果返回" class="headerlink" title="未登录结果返回"></a>未登录结果返回</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 当未登录或者token失效访问接口时，自定义返回结果</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">RestAuthenticationEntryPoint</span> <span class="keyword">implements</span> <span class="title class_">AuthenticationEntryPoint</span> &#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">commence</span><span class="params">(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e)</span> <span class="keyword">throws</span> IOException, ServletException &#123;</span><br><span class="line">        httpServletResponse.setCharacterEncoding(<span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">        httpServletResponse.setContentType(<span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">        httpServletResponse.getWriter().println(</span><br><span class="line">                JSONUtil.parse(CommonResult.unauthorized())</span><br><span class="line">        );</span><br><span class="line">        httpServletResponse.getWriter().flush();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="AuthenticationManager"><a href="#AuthenticationManager" class="headerlink" title="AuthenticationManager"></a>AuthenticationManager</h3><p><strong>在这里直接在SpringSecurity类内注入</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Bean</span></span><br><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> AuthenticationManager <span class="title function_">authenticationManagerBean</span><span class="params">()</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line"><span class="keyword">return</span> <span class="built_in">super</span>.authenticationManagerBean();</span><br><span class="line">&#125;	</span><br></pre></td></tr></table></figure>
+
+<p><strong>AuthenticationManager提供了方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//实现类ProviderManager</span></span><br><span class="line">Authentication <span class="title function_">authenticate</span><span class="params">(Authentication authentication)</span> <span class="keyword">throws</span> AuthenticationException;</span><br></pre></td></tr></table></figure>
+
+<p><strong>AuthenticationManager.authenticate方法内，会遍历寻找可以处理的AuthenticationProvider，调用</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//DaoAuthenticationProvider继承自AbstractUserDetailsAuthenticationProvider</span></span><br><span class="line"><span class="comment">//AbstractUserDetailsAuthenticationProvider实现了AuthenticationProvider接口</span></span><br><span class="line">Authentication AuthenticationProvider.authenticate(Authentication authentication) <span class="keyword">throws</span> AuthenticationException;</span><br></pre></td></tr></table></figure>
+
+<p><strong>AuthenticationProvider.authenticate方法内，调用抽象方法retrieveUser</strong></p>
+<p><strong>DaoAuthenticationProvider.retrieveUser方法内，调用UserDetailsService根据username进行查询返回UserDetails，调用方法检查UserDetails内是否可用，并返回最终结果</strong></p>
+<h3 id="Controller接口"><a href="#Controller接口" class="headerlink" title="Controller接口"></a>Controller接口</h3><h4 id="品牌管理接口"><a href="#品牌管理接口" class="headerlink" title="品牌管理接口"></a>品牌管理接口</h4><p><strong>PmsBrandController</strong></p>
+<p><strong>定义接口权限注解</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;pms:brand:update&#x27;)&quot;)</span></span><br></pre></td></tr></table></figure>
+<p><strong>注意：UserDetails获得的用户用户权限列表，应该包含这个权限字段(pms:brand:update)，也就是要与数据库存储的权限信息格式对应</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Collection&lt;? <span class="keyword">extends</span> <span class="title class_">GrantedAuthority</span>&gt; UserDetails.getAuthorities();</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 品牌管理Controller</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Api(tags = &quot;PmsBrandController&quot;)</span></span><br><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/brand&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PmsBrandController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    PmsBrandService pmsBrandService;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//生成日志Logger对象</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Logger</span> <span class="variable">LOGGER</span> <span class="operator">=</span> LoggerFactory.getLogger(PmsBrandController.class);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;获取所有品牌类别&quot;)</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;pms:brand:read&#x27;)&quot;)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/listAll&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">listAll</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(pmsBrandService.listAllBrand());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;添加品牌&quot;)</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;pms:brand:create&#x27;)&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/create&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">createBrand</span><span class="params">(PmsBrand pmsBrand)</span>&#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> pmsBrandService.createBrand(pmsBrand);</span><br><span class="line">        <span class="keyword">if</span> (flag)&#123;</span><br><span class="line">            <span class="keyword">return</span> CommonResult.success();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            LOGGER.info(<span class="string">&quot;createBrand操作失败&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> CommonResult.failed();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;删除指定Id品牌信息&quot;)</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;pms:brand:delete&#x27;)&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/delete&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">deleteBrand</span><span class="params">(<span class="type">long</span> id)</span>&#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> pmsBrandService.deleteBrand(id);</span><br><span class="line">        <span class="keyword">if</span> (flag)&#123;</span><br><span class="line">            <span class="keyword">return</span> CommonResult.success();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            LOGGER.info(<span class="string">&quot;deleteBrand操作失败&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> CommonResult.failed();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;更新指定Id品牌信息&quot;)</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;pms:brand:update&#x27;)&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/update/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">updateBrand</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="type">long</span> id, PmsBrand pmsBrand)</span>&#123;</span><br><span class="line">        <span class="type">boolean</span> <span class="variable">flag</span> <span class="operator">=</span> pmsBrandService.updateBrand(id, pmsBrand);</span><br><span class="line">        <span class="keyword">if</span> (flag)&#123;</span><br><span class="line">            <span class="keyword">return</span> CommonResult.success();</span><br><span class="line">        &#125;<span class="keyword">else</span> &#123;</span><br><span class="line">            LOGGER.info(<span class="string">&quot;updateBrand操作失败&quot;</span>);</span><br><span class="line">            <span class="keyword">return</span> CommonResult.failed();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;分页查询品牌信息&quot;)</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;pms:brand:read&#x27;)&quot;)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/list&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">pageBrand</span><span class="params">(<span class="meta">@RequestParam(value = &quot;pageNum&quot;,defaultValue = &quot;1&quot;)</span> <span class="type">int</span> pageNum,</span></span><br><span class="line"><span class="params">                                  <span class="meta">@RequestParam(value = &quot;paegSize&quot;,defaultValue = &quot;3&quot;)</span> <span class="type">int</span> pageSize)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(pmsBrandService.listPmsBrand(pageNum,pageSize));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;查询指定Id品牌信息&quot;)</span></span><br><span class="line">    <span class="meta">@PreAuthorize(&quot;hasAuthority(&#x27;pms:brand:read&#x27;)&quot;)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/&#123;id&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">getBrandById</span><span class="params">(<span class="meta">@PathVariable(&quot;id&quot;)</span> <span class="type">long</span> id)</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(pmsBrandService.getPmsBrand(id));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="用户功能接口"><a href="#用户功能接口" class="headerlink" title="用户功能接口"></a>用户功能接口</h4><p><strong>UmsAdminController</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RestController</span></span><br><span class="line"><span class="meta">@RequestMapping(&quot;/admin&quot;)</span></span><br><span class="line"><span class="meta">@Api(tags = &quot;UmsAdminController&quot;, description = &quot;后台用户管理&quot;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">UmsAdminController</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> UmsAdminService umsAdminService;</span><br><span class="line">    <span class="meta">@Value(&quot;jwt.tokenHead&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String tokenHead;</span><br><span class="line">    <span class="meta">@Value(&quot;jwt.tokenHeader&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String tokenHeader;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(value = &quot;用户注册&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/register&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">register</span><span class="params">(UmsAdmin umsAdmin)</span>&#123;</span><br><span class="line">        <span class="type">UmsAdmin</span> <span class="variable">umsAdminResult</span> <span class="operator">=</span> umsAdminService.register(umsAdmin);</span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(umsAdminResult))&#123;</span><br><span class="line">            <span class="keyword">return</span> CommonResult.failed(<span class="string">&quot;注册失败&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(umsAdminResult);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;登陆后返回Token&quot;)</span></span><br><span class="line">    <span class="meta">@PostMapping(&quot;/login&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">login</span><span class="params">(String username, String password)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isBlank(username) || StringUtils.isBlank(password))&#123;</span><br><span class="line">            <span class="keyword">return</span> CommonResult.validateFailed();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">String</span> <span class="variable">token</span> <span class="operator">=</span> umsAdminService.login(username, password);</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isBlank(token))&#123;</span><br><span class="line">            <span class="keyword">return</span> CommonResult.validateFailed(<span class="string">&quot;用户名或密码错误&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        Map&lt;String, String&gt; tokenMap = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;();</span><br><span class="line">        tokenMap.put(<span class="string">&quot;token&quot;</span>,token);</span><br><span class="line">        tokenMap.put(<span class="string">&quot;tokenHead&quot;</span>,tokenHead);</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(tokenMap);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ApiOperation(&quot;获取权限列表&quot;)</span></span><br><span class="line">    <span class="meta">@GetMapping(&quot;/permission/&#123;adminId&#125;&quot;)</span></span><br><span class="line">    <span class="keyword">public</span> CommonResult <span class="title function_">getPermissionList</span><span class="params">(<span class="meta">@PathVariable(&quot;adminId&quot;)</span> <span class="type">long</span> adminId)</span>&#123;</span><br><span class="line">        List&lt;UmsPermission&gt; permissionList = umsAdminService.getPermissionList(adminId);</span><br><span class="line">        <span class="keyword">return</span> CommonResult.success(permissionList);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Spring/" rel="tag"># Spring</a>
+          
+            <a href="/tags/SpringBoot/" rel="tag"># SpringBoot</a>
+          
+            <a href="/tags/SpringSecurity/" rel="tag"># SpringSecurity</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/07/29/Swagger3-Note/" rel="next" title="Swagger3-Note">
+                <i class="fa fa-chevron-left"></i> Swagger3-Note
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/08/10/Docker-Note/" rel="prev" title="Docker Note">
+                Docker Note <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yancy0109" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:yancy0109@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JWT%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">JWT介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JWT%E7%BB%84%E6%88%90"><span class="nav-number">2.1.</span> <span class="nav-text">JWT组成</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%BC%E5%BC%8F"><span class="nav-number">2.1.1.</span> <span class="nav-text">格式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#header"><span class="nav-number">2.1.2.</span> <span class="nav-text">header</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#payload"><span class="nav-number">2.1.3.</span> <span class="nav-text">payload</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#signature"><span class="nav-number">2.1.4.</span> <span class="nav-text">signature</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%AE%A4%E8%AF%81%E4%B8%8E%E6%8E%88%E6%9D%83%E5%8E%9F%E7%90%86"><span class="nav-number">2.1.5.</span> <span class="nav-text">认证与授权原理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96"><span class="nav-number">2.2.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B7%A5%E5%85%B7%E7%B1%BB"><span class="nav-number">2.3.</span> <span class="nav-text">工具类</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SpringSecurity"><span class="nav-number">3.</span> <span class="nav-text">SpringSecurity</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BE%9D%E8%B5%96-1"><span class="nav-number">3.1.</span> <span class="nav-text">依赖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8"><span class="nav-number">3.2.</span> <span class="nav-text">使用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SpringSecurity%E9%85%8D%E7%BD%AE%E7%B1%BB"><span class="nav-number">3.2.1.</span> <span class="nav-text">SpringSecurity配置类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PasswordEncoder"><span class="nav-number">3.2.2.</span> <span class="nav-text">PasswordEncoder</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UserDetailsService"><span class="nav-number">3.2.3.</span> <span class="nav-text">UserDetailsService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UserDetails%E5%AE%9E%E7%8E%B0%E7%B1%BB"><span class="nav-number">3.2.4.</span> <span class="nav-text">UserDetails实现类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UmsAdminService"><span class="nav-number">3.2.5.</span> <span class="nav-text">UmsAdminService</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UmsPermission%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="nav-number">3.2.6.</span> <span class="nav-text">UmsPermission实体类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UmsAdmin%E5%AE%9E%E4%BD%93%E7%B1%BB"><span class="nav-number">3.2.7.</span> <span class="nav-text">UmsAdmin实体类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Jwt%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="nav-number">3.2.8.</span> <span class="nav-text">Jwt过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AA%E7%99%BB%E5%BD%95%E7%BB%93%E6%9E%9C%E8%BF%94%E5%9B%9E"><span class="nav-number">3.2.9.</span> <span class="nav-text">未登录结果返回</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#AuthenticationManager"><span class="nav-number">3.2.10.</span> <span class="nav-text">AuthenticationManager</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Controller%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.2.11.</span> <span class="nav-text">Controller接口</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%93%81%E7%89%8C%E7%AE%A1%E7%90%86%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.2.11.1.</span> <span class="nav-text">品牌管理接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8%E6%88%B7%E5%8A%9F%E8%83%BD%E6%8E%A5%E5%8F%A3"><span class="nav-number">3.2.11.2.</span> <span class="nav-text">用户功能接口</span></a></li></ol></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yancy0109</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-CN">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Docker,linux," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Docker 一些操作，哪天有重要的再补充哈哈哈哈  Docker安装 在这里采用Docker仓库安装，一开始我使用curl自动安装脚本，后续我在Linux机器上想安装Docker Desktop，就发现一个问题。。！！！Docker无法卸载干净，所以在这里用仓库安装方法。  安装需求： 我只解决了两个问题，其他问题并未太在意，在后续安装没有遇到问题。   CPU虚拟化  虚拟机在虚拟机设置界面起">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Note">
+<meta property="og:url" content="https://yancy0109.github.io/2022/08/10/Docker-Note/index.html">
+<meta property="og:site_name" content="炸毛的猫">
+<meta property="og:description" content="Docker 一些操作，哪天有重要的再补充哈哈哈哈  Docker安装 在这里采用Docker仓库安装，一开始我使用curl自动安装脚本，后续我在Linux机器上想安装Docker Desktop，就发现一个问题。。！！！Docker无法卸载干净，所以在这里用仓库安装方法。  安装需求： 我只解决了两个问题，其他问题并未太在意，在后续安装没有遇到问题。   CPU虚拟化  虚拟机在虚拟机设置界面起">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201095344783.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201100119301.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201100937488.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201155607919.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201164455712.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201164515462.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201164640632.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201164655435.png">
+<meta property="og:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201164802712.png">
+<meta property="article:published_time" content="2022-08-10T02:19:28.000Z">
+<meta property="article:modified_time" content="2022-12-20T09:07:28.261Z">
+<meta property="article:author" content="yancy0109">
+<meta property="article:tag" content="Docker">
+<meta property="article:tag" content="linux">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://yancy0109.github.io/2022/08/10/Docker-Note/image-20221201095344783.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://yancy0109.github.io/2022/08/10/Docker-Note/"/>
+
+
+
+
+
+  <title>Docker Note | 炸毛的猫</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?42b3b6032f376678cb51742535f641c8";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-CN">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">炸毛的猫</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://yancy0109.github.io/2022/08/10/Docker-Note/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炸毛的猫">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Docker Note</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2022-08-10T10:19:28+08:00">
+                2022-08-10
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Docker/" itemprop="url" rel="index">
+                    <span itemprop="name">Docker</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Docker"><a href="#Docker" class="headerlink" title="Docker"></a>Docker</h1><blockquote>
+<p>一些操作，哪天有重要的再补充哈哈哈哈</p>
+</blockquote>
+<h2 id="Docker安装"><a href="#Docker安装" class="headerlink" title="Docker安装"></a>Docker安装</h2><blockquote>
+<p>在这里采用Docker仓库安装，一开始我使用curl自动安装脚本，后续我在Linux机器上想安装Docker Desktop，就发现一个问题。。！！！Docker无法卸载干净，所以在这里用仓库安装方法。</p>
+</blockquote>
+<h3 id="安装需求："><a href="#安装需求：" class="headerlink" title="安装需求："></a>安装需求：</h3><blockquote>
+<p>我只解决了两个问题，其他问题并未太在意，在后续安装没有遇到问题。</p>
+</blockquote>
+<ul>
+<li><p>CPU虚拟化</p>
+<blockquote>
+<p>虚拟机在虚拟机设置界面起开，否则进入BIOS在安全界面开启CPU Vrtualization</p>
+</blockquote>
+</li>
+<li><p>KVM虚拟化支持(开启CPU自动开启)</p>
+</li>
+</ul>
+<h3 id="安装步骤："><a href="#安装步骤：" class="headerlink" title="安装步骤："></a>安装步骤：</h3><h4 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h4><h5 id="从Docker仓库下载Docker"><a href="#从Docker仓库下载Docker" class="headerlink" title="从Docker仓库下载Docker"></a>从Docker仓库下载Docker</h5><p>移除老版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt-get remove docker docker-engine docker.io containerd runc</span></span><br></pre></td></tr></table></figure>
+
+<p>设置Docker仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新索引</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt-get update</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载HTTPS工具</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt-get install \</span></span><br><span class="line"><span class="language-bash">    ca-certificates \</span></span><br><span class="line"><span class="language-bash">    curl \</span></span><br><span class="line"><span class="language-bash">    gnupg \</span></span><br><span class="line"><span class="language-bash">    lsb-release</span></span><br></pre></td></tr></table></figure>
+
+<p>添加Docker官方GPG key</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo <span class="built_in">mkdir</span> -p /etc/apt/keyrings</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg</span></span><br></pre></td></tr></table></figure>
+
+<p>设置仓库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">echo</span> \</span></span><br><span class="line"><span class="language-bash">  <span class="string">&quot;deb [arch=<span class="subst">$(dpkg --print-architecture)</span> signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \</span></span></span><br><span class="line"><span class="string"><span class="language-bash">  <span class="subst">$(lsb_release -cs)</span> stable&quot;</span> | sudo <span class="built_in">tee</span> /etc/apt/sources.list.d/docker.list &gt; /dev/null</span></span><br></pre></td></tr></table></figure>
+
+<p>更新索引</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt-get update</span></span><br></pre></td></tr></table></figure>
+
+<p>在这里我遇到了一个问题</p>
+<p><img sdasdasd src="image-20221201095344783.png" alt="image-20221201095344783"></p>
+<p>解决如下：修改resolv.conf中的DNS </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo vim /etc/resolv.conf</span></span><br></pre></td></tr></table></figure>
+
+<p>添加两个域名服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nameserver 223.5.5.5</span><br><span class="line">nameserver 223.6.6.6</span><br></pre></td></tr></table></figure>
+<p>再次更新索引  &gt;&gt;&gt;&gt;  成功</p>
+<p>下载Docker</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载最新版</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin</span></span><br></pre></td></tr></table></figure>
+
+<p>拉去测试镜像测试</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo docker run hello-world</span></span><br></pre></td></tr></table></figure>
+
+<p><img sdasdasd src="image-20221201100119301.png" alt="image-20221201100119301"></p>
+<blockquote>
+<p>我在安装Docker-Desktop后，就可以不使用sudo了。。。并且与sudo显示的目录不同</p>
+</blockquote>
+<h5 id="安装Docker-Desktop"><a href="#安装Docker-Desktop" class="headerlink" title="安装Docker-Desktop"></a>安装Docker-Desktop</h5><blockquote>
+<p>我安装了图形化Ubuntu暂作服务器使用，所以安装了Docker Desktop</p>
+</blockquote>
+<p>安装必要组件以及清理早期版本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt install gnome-terminal</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">清理Docker-Desktop</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt remove docker-desktop</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">rm</span> -r <span class="variable">$HOME</span>/.docker/desktop</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo <span class="built_in">rm</span> /usr/local/bin/com.docker.cli</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt purge docker-desktop</span></span><br></pre></td></tr></table></figure>
+
+<p>下载 Docker-Desktop安装包</p>
+<p>我在下载后通过XFTP传输至了服务器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">更新索引</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt-get update</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装本地deb包</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo apt-get install ./docker-desktop-&lt;version&gt;-&lt;<span class="built_in">arch</span>&gt;.deb</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下方错误忽略即可</span></span><br></pre></td></tr></table></figure>
+
+<p><img sdasdasd src="image-20221201100937488.png" alt="image-20221201100937488"></p>
+<p>接下来就可以在桌面使用Docker-Desktop客户端了</p>
+<blockquote>
+<p>在这里我遇到了个情况。。。在Docker-Desktop启动后，不需要在cmd命令中使用sudo了。。。并且sudo情况下与不加的情况下，所看的镜像不同。</p>
+</blockquote>
+<p>推荐教学及配套文档</p>
+<h4 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h4><h5 id="安装Docker-Desktop-1"><a href="#安装Docker-Desktop-1" class="headerlink" title="安装Docker-Desktop"></a>安装Docker-Desktop</h5><blockquote>
+<p>目前Winows下Docker-Desktop是通过wsl进行管理</p>
+</blockquote>
+<p>开启Windows功能</p>
+<p><img sdasdasd src="image-20221201155607919.png" alt="image-20221201155607919"></p>
+<p>注：会与VM16中虚拟机CPU虚拟化冲突</p>
+<p>安装WSL</p>
+<p>再次下载官方下载安装即可</p>
+<h4 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h4><h5 id="镜像源"><a href="#镜像源" class="headerlink" title="镜像源"></a>镜像源</h5><p>添加docker镜像源</p>
+<pre><code> 解决：添加registry-mirrors
+</code></pre>
+<h5 id="打包报错"><a href="#打包报错" class="headerlink" title="打包报错"></a>打包报错</h5><p>failed to solve with frontend dockerfile.v0: failed to create LLB definition: unexpected status code [manifests 11]: 403 Forbidden</p>
+<p>解决：buildkit : false</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="punctuation">&#123;</span></span><br><span class="line">  <span class="attr">&quot;builder&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;gc&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">      <span class="attr">&quot;defaultKeepStorage&quot;</span><span class="punctuation">:</span> <span class="string">&quot;20GB&quot;</span><span class="punctuation">,</span></span><br><span class="line">      <span class="attr">&quot;enabled&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">true</span></span></span><br><span class="line">    <span class="punctuation">&#125;</span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;experimental&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;features&quot;</span><span class="punctuation">:</span> <span class="punctuation">&#123;</span></span><br><span class="line">    <span class="attr">&quot;buildkit&quot;</span><span class="punctuation">:</span> <span class="literal"><span class="keyword">false</span></span></span><br><span class="line">  <span class="punctuation">&#125;</span><span class="punctuation">,</span></span><br><span class="line">  <span class="attr">&quot;registry-mirrors&quot;</span><span class="punctuation">:</span> <span class="punctuation">[</span></span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span><span class="punctuation">,</span></span><br><span class="line">    <span class="string">&quot;https://docker.mirrors.ustc.edu.cn&quot;</span></span><br><span class="line">  <span class="punctuation">]</span></span><br><span class="line"><span class="punctuation">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="Windows安装位置"><a href="#Windows安装位置" class="headerlink" title="Windows安装位置"></a>Windows安装位置</h5><p>参考 </p>
+<blockquote>
+<p>Windows是通过wsl安装了docker虚拟机，可以通过更改wsl导入和导出，将docker移动到其他磁盘，节省C盘空间</p>
+</blockquote>
+<p>关闭Docker-Desktop</p>
+<p>右键小鲸鱼，quit</p>
+<p><img sdasdasd src="image-20221201164455712.png" alt="image-20221201164455712"></p>
+<p>导出至指定目录</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--export</span> &lt;Distribution Name&gt; &lt;FileName&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img sdasdasd src="image-20221201164515462.png" alt="image-20221201164515462"></p>
+<p>注销虚拟机</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--unregister</span> &lt;DistributionName&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p><img sdasdasd src="image-20221201164640632.png" alt="image-20221201164640632"></p>
+<p>导入指定目录的打包文件</p>
+<p><img sdasdasd src="image-20221201164655435.png" alt="image-20221201164655435"></p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wsl <span class="literal">--import-in-place</span> &lt;Distribution Name&gt; &lt;FileName&gt;</span><br></pre></td></tr></table></figure>
+
+<p>重新启动Docker-Desktop</p>
+<p>双击运行即可</p>
+<p>补充：指定默认Linux发行版本</p>
+<figure class="highlight powershell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 应该是不影响使用的。</span></span><br><span class="line">wsl <span class="literal">--set-default</span> &lt;Distribution Name&gt;</span><br></pre></td></tr></table></figure>
+
+<p><img sdasdasd src="image-20221201164802712.png" alt="image-20221201164802712"></p>
+<h2 id="Portainer"><a href="#Portainer" class="headerlink" title="Portainer"></a>Portainer</h2><blockquote>
+<p>Powerful container management</p>
+<p>Docker图形化界面可以简化一些操作，但图形化界面更方便更直观哇咔咔</p>
+<p>Docker Desktop只可以在主机上使用，但安装Portainer，可以将服务暴露出来，提供Web界面的管理界面</p>
+</blockquote>
+<p>创建容器</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker volume create portainer_data</span></span><br></pre></td></tr></table></figure>
+
+<p>运行容器(。。当然是社区免费版)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">docker run -d -p 8000:8000 -p 9443:9443 --name portainer --restart=always -v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data portainer/portainer-ce:latest</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>By default, Portainer generates and uses a self-signed SSL certificate to secure port <code>9443</code>. Alternatively you can provide your own SSL certificate <a href="">during installation</a> or <a href="">via the Portainer UI</a> after installation is complete.</p>
+<p>If you require HTTP port <code>9000</code> open for legacy reasons, add the following to your <code>docker run</code> command:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-p 9000:9000</span><br></pre></td></tr></table></figure>
+
+<p>嗯。。。我的当然还是HTTP</p>
+</blockquote>
+<p>开启防火墙端口</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">sudo ufw allow 9000/tcp</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Docker/" rel="tag"># Docker</a>
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/08/01/SpringSecurity-Note/" rel="next" title="SpringSecurity Note">
+                <i class="fa fa-chevron-left"></i> SpringSecurity Note
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/08/10/MongoDB-Note/" rel="prev" title="MongoDB Note">
+                MongoDB Note <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="" />
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">posts</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">categories</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">tags</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/yancy0109" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:yancy0109@foxmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Docker"><span class="nav-number">1.</span> <span class="nav-text">Docker</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Docker%E5%AE%89%E8%A3%85"><span class="nav-number">1.1.</span> <span class="nav-text">Docker安装</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E9%9C%80%E6%B1%82%EF%BC%9A"><span class="nav-number">1.1.1.</span> <span class="nav-text">安装需求：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%89%E8%A3%85%E6%AD%A5%E9%AA%A4%EF%BC%9A"><span class="nav-number">1.1.2.</span> <span class="nav-text">安装步骤：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Linux"><span class="nav-number">1.1.2.1.</span> <span class="nav-text">Linux</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BB%8EDocker%E4%BB%93%E5%BA%93%E4%B8%8B%E8%BD%BDDocker"><span class="nav-number">1.1.2.1.1.</span> <span class="nav-text">从Docker仓库下载Docker</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker-Desktop"><span class="nav-number">1.1.2.1.2.</span> <span class="nav-text">安装Docker-Desktop</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Windows"><span class="nav-number">1.1.2.2.</span> <span class="nav-text">Windows</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%AE%89%E8%A3%85Docker-Desktop-1"><span class="nav-number">1.1.2.2.1.</span> <span class="nav-text">安装Docker-Desktop</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.2.3.</span> <span class="nav-text">问题</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">1.1.2.3.1.</span> <span class="nav-text">镜像源</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%93%E5%8C%85%E6%8A%A5%E9%94%99"><span class="nav-number">1.1.2.3.2.</span> <span class="nav-text">打包报错</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Windows%E5%AE%89%E8%A3%85%E4%BD%8D%E7%BD%AE"><span class="nav-number">1.1.2.3.3.</span> <span class="nav-text">Windows安装位置</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Portainer"><span class="nav-number">1.2.</span> <span class="nav-text">Portainer</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yancy0109</span>
+
+  
+</div>
+
+
+  <div class="powered-by">Powered by <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a></div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">Theme &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
