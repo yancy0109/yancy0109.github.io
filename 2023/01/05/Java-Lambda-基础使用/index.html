@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"yancy0109.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="JDK 8 新特性，记录了一些基本使用方法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java Lambda 基础使用">
+<meta property="og:url" content="https://yancy0109.github.io/2023/01/05/Java-Lambda-%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="炸毛的猫">
+<meta property="og:description" content="JDK 8 新特性，记录了一些基本使用方法">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-04T16:02:15.000Z">
+<meta property="article:modified_time" content="2023-01-04T16:30:29.421Z">
+<meta property="article:author" content="yancy0109">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://yancy0109.github.io/2023/01/05/Java-Lambda-%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>Java Lambda 基础使用 | 炸毛的猫</title>
+  
+
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?42b3b6032f376678cb51742535f641c8";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">炸毛的猫</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://yancy0109.github.io/2023/01/05/Java-Lambda-%E5%9F%BA%E7%A1%80%E4%BD%BF%E7%94%A8/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.jpg">
+      <meta itemprop="name" content="yancy0109">
+      <meta itemprop="description" content="Talk is cheap,show me the code.">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="炸毛的猫">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Java Lambda 基础使用
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2023-01-05 00:02:15 / 修改时间：00:30:29" itemprop="dateCreated datePublished" datetime="2023-01-05T00:02:15+08:00">2023-01-05</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>JDK 8 新特性，记录了一些基本使用方法</p>
+<span id="more"></span>
+
+<h2 id="Lambda"><a href="#Lambda" class="headerlink" title="Lambda"></a>Lambda</h2><p><strong>JDK1.8&#x2F;8新特性</strong></p>
+<blockquote>
+<p>下面是一些使用方法</p>
+</blockquote>
+<h4 id="函数式接口"><a href="#函数式接口" class="headerlink" title="函数式接口"></a>函数式接口</h4><p>仅包含一个方法的接口</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">Runnable</span> &#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * When an object implementing interface &lt;code&gt;Runnable&lt;/code&gt; is used</span></span><br><span class="line"><span class="comment">     * to create a thread, starting the thread causes the object&#x27;s</span></span><br><span class="line"><span class="comment">     * &lt;code&gt;run&lt;/code&gt; method to be called in that separately executing</span></span><br><span class="line"><span class="comment">     * thread.</span></span><br><span class="line"><span class="comment">     * &lt;p&gt;</span></span><br><span class="line"><span class="comment">     * The general contract of the method &lt;code&gt;run&lt;/code&gt; is that it may</span></span><br><span class="line"><span class="comment">     * take any action whatsoever.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span>     java.lang.Thread#run()</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title function_">run</span><span class="params">()</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>使用方法</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">main</span><span class="params">(String[] args)</span> &#123;</span><br><span class="line">    <span class="type">Runnable</span> <span class="variable">runnable</span> <span class="operator">=</span> () -&gt; &#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;多线程&quot;</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="type">Thread</span> <span class="variable">thread</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">Thread</span>(runnable, <span class="string">&quot;Thread&quot;</span>);</span><br><span class="line">    thread.start();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="多个list合并成一个list"><a href="#多个list合并成一个list" class="headerlink" title="多个list合并成一个list"></a>多个list合并成一个list</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">List</span> <span class="variable">taskKpiList</span> <span class="operator">=</span> taskDetailVO.getTaskTypeList().stream().map(PerfEvaluateTaskTypeVO::getTaskKpiList).flatMap(Collection::stream).collect(Collectors.*toList*());</span><br></pre></td></tr></table></figure>
+
+<h4 id="判空"><a href="#判空" class="headerlink" title="判空"></a>判空</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">String</span> <span class="variable">gradeName</span> <span class="operator">=</span> Optional.ofNullable(evaluationLevel).map(PerfEvaluationLevelModel::getGradeName).orElse(<span class="string">&quot;&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="去重"><a href="#去重" class="headerlink" title="去重"></a>去重</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">itemAuditsModels = itemAuditsModels.stream().collect(</span><br><span class="line">        Collectors.collectingAndThen(</span><br><span class="line">                Collectors.toCollection(() -&gt; <span class="keyword">new</span> <span class="title class_">TreeSet</span>&lt;&gt;(Comparator.comparing(EmployeeBaseInfoModel::getEmployeeId))), ArrayList::<span class="keyword">new</span>))</span><br></pre></td></tr></table></figure>
+
+<h4 id="分组统计"><a href="#分组统计" class="headerlink" title="分组统计"></a>分组统计</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, Long&gt; taskUserCountMap = list.stream().collect(Collectors.groupingBy(ReportUserTaskExcelVO::getTaskUserId, Collectors.counting()));</span><br></pre></td></tr></table></figure>
+
+<h4 id="integer求和"><a href="#integer求和" class="headerlink" title="integer求和"></a>integer求和</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">todoNumDtoList.stream().map(WorkBenchTodoNumDto::getNum).reduce(Integer::sum).orElse(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="有序分组"><a href="#有序分组" class="headerlink" title="有序分组"></a>有序分组</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LinkedHashMap&lt;String, Long&gt; taskUserCountMap = list.stream().collect(Collectors.groupingBy(ReportUserTaskExcelVO::getTaskUserId, LinkedHashMap::<span class="keyword">new</span>, Collectors.counting()));</span><br></pre></td></tr></table></figure>
+
+<h4 id="取某个字段最小的记录"><a href="#取某个字段最小的记录" class="headerlink" title="取某个字段最小的记录"></a>取某个字段最小的记录</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bookList.stream().min(Comparator.comparing(Book::getSort)).get();</span><br></pre></td></tr></table></figure>
+
+<h4 id="map删除"><a href="#map删除" class="headerlink" title="map删除"></a>map删除</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">itemMap.entrySet().removeIf(entry -&gt; &#123;</span><br><span class="line">    <span class="type">KanbanItemVO</span> <span class="variable">itemVO</span> <span class="operator">=</span> entry.getValue();</span><br><span class="line">    <span class="keyword">if</span> (BusinessConstant.TRUE.equals(itemVO.getIsDeleted()) &amp;&amp; BigDecimal.ZERO.compareTo(itemVO.getProgress()) == <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="排序字段存在null"><a href="#排序字段存在null" class="headerlink" title="排序字段存在null"></a>排序字段存在null</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span> list.stream().sorted(Comparator.comparing(ReportYearCountVO::getFinalScore, Comparator.nullsLast(BigDecimal::compareTo))).collect(Collectors.toList());</span><br><span class="line"><span class="keyword">return</span> list.stream().sorted(Comparator.comparing(ReportYearCountVO::getFinalScore, Comparator.nullsFirst(BigDecimal::compareTo))).collect(Collectors.toList());</span><br><span class="line">nullsLast：<span class="literal">null</span>放在最后</span><br><span class="line">nullsFirst：<span class="literal">null</span>放在最前面</span><br></pre></td></tr></table></figure>
+
+<h4 id="BigDecimal分组求和"><a href="#BigDecimal分组求和" class="headerlink" title="BigDecimal分组求和"></a>BigDecimal分组求和</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">List&lt;DepartmentEntity&gt; ds = <span class="keyword">new</span> <span class="title class_">List</span>&lt;DepartmentEntity&gt;();</span><br><span class="line"><span class="comment">//假设集合中已有数据………………</span></span><br><span class="line"><span class="comment">//1、先对集合根据名称进行分组,此时 List&lt;DepartmentEntity&gt; 已转为以名称（name）属性为key的 Map&lt;String,List&lt;DepartmentEntity&gt;&gt;</span></span><br><span class="line">Map&lt;String,BigDecimal&gt; moneySumGroupByName = ds.stream().collect(Collectors.groupingBy(DepartmentEntity::getName))</span><br><span class="line"><span class="comment">//2、此时利用 Map 的 entrySet() 方法得到 ,得到 Map.Entry 的 Set 集合</span></span><br><span class="line">.entrySet()</span><br><span class="line"><span class="comment">//3、对 Set 集合进行 toMap,此时新 Map 的 key 继续使用 Map.Entry 的 key ，也就是名称；</span></span><br><span class="line"><span class="comment">//在处理 value 时，因为此时value是已经根据名称分组后的集合，所以这里直接进行集合求和即可</span></span><br><span class="line">.stream().collect(Collectors.toMap(Map.Entry::getKey,m-&gt;m.getValue()</span><br><span class="line">.stream()</span><br><span class="line"><span class="comment">//3、过滤非空</span></span><br><span class="line">.filter(d-&gt;Objects.nonNull(d.getMoney()))</span><br><span class="line"><span class="comment">//4、stream 对 BigDecimal 的求和</span></span><br><span class="line">.map(DepartmentEntity::getMoney).reduce(BigDecimal.ZERO,BigDecimal::add)));</span><br></pre></td></tr></table></figure>
+
+<h4 id="map转list"><a href="#map转list" class="headerlink" title="map转list"></a>map转list</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">quarterMap.entrySet().stream().map(entry -&gt; TaskExecuteQuarterModel.builder().quarter(entry.getKey()).taskExecuteList(entry.getValue()).build()).collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+
+<p>排序</p>
+<pre><code class="java">list = list.stream().sorted(Comparator.comparing(WaterCurrentDto::getCs, Comparator.nullsLast(String::compareTo).reversed())
+        .thenComparing(WaterCurrentDto::getCAll, Comparator.nullsLast(BigDecimal::compareTo).reversed())).collect(Collectors.toList());
+</code></pre>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/Java/" rel="tag"># Java</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2022/12/21/%E5%A6%82%E4%BD%95%E5%AF%B9PowerShell%E8%BF%9B%E8%A1%8C%E7%BE%8E%E5%8C%96/" rel="prev" title="如何对PowerShell进行美化">
+      <i class="fa fa-chevron-left"></i> 如何对PowerShell进行美化
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/01/05/Java%E5%B9%B6%E5%8F%91%E7%BC%96%E7%A8%8B%E7%9A%84%E8%89%BA%E6%9C%AF/" rel="next" title="Java并发编程的艺术">
+      Java并发编程的艺术 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lambda"><span class="nav-number">1.</span> <span class="nav-text">Lambda</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3"><span class="nav-number">1.0.1.</span> <span class="nav-text">函数式接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A4%9A%E4%B8%AAlist%E5%90%88%E5%B9%B6%E6%88%90%E4%B8%80%E4%B8%AAlist"><span class="nav-number">1.0.2.</span> <span class="nav-text">多个list合并成一个list</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%A4%E7%A9%BA"><span class="nav-number">1.0.3.</span> <span class="nav-text">判空</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8E%BB%E9%87%8D"><span class="nav-number">1.0.4.</span> <span class="nav-text">去重</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%88%86%E7%BB%84%E7%BB%9F%E8%AE%A1"><span class="nav-number">1.0.5.</span> <span class="nav-text">分组统计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#integer%E6%B1%82%E5%92%8C"><span class="nav-number">1.0.6.</span> <span class="nav-text">integer求和</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%89%E5%BA%8F%E5%88%86%E7%BB%84"><span class="nav-number">1.0.7.</span> <span class="nav-text">有序分组</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%96%E6%9F%90%E4%B8%AA%E5%AD%97%E6%AE%B5%E6%9C%80%E5%B0%8F%E7%9A%84%E8%AE%B0%E5%BD%95"><span class="nav-number">1.0.8.</span> <span class="nav-text">取某个字段最小的记录</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#map%E5%88%A0%E9%99%A4"><span class="nav-number">1.0.9.</span> <span class="nav-text">map删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%8E%92%E5%BA%8F%E5%AD%97%E6%AE%B5%E5%AD%98%E5%9C%A8null"><span class="nav-number">1.0.10.</span> <span class="nav-text">排序字段存在null</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#BigDecimal%E5%88%86%E7%BB%84%E6%B1%82%E5%92%8C"><span class="nav-number">1.0.11.</span> <span class="nav-text">BigDecimal分组求和</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#map%E8%BD%AClist"><span class="nav-number">1.0.12.</span> <span class="nav-text">map转list</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="yancy0109"
+      src="/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">yancy0109</p>
+  <div class="site-description" itemprop="description">Talk is cheap,show me the code.</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">14</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/yancy0109" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;yancy0109" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:yancy0109@foxmail.com" title="E-Mail → mailto:yancy0109@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">yancy0109</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://mist.theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Mist</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
